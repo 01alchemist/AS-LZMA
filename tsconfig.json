@@ -1,0 +1,12 @@
+{
+    "extends": "node_modules/assemblyscript/std/assembly.json",
+    "compilerOptions": {
+        "target": "esnext",
+        "module": "commonjs",
+        "noLib": true,
+        "allowJs": false,
+        "typeRoots": ["types"],
+        "types": ["assembly"]
+    },
+    "include": ["./**/*.ts"]
+}

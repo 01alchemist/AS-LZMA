@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>LZMA parallel decoding by Nidin Vinayakan</title>
+    <style>
+        body,input{
+            font-family: courier;
+        }
+    </style>
+    <script>
+
+        var readers = [];
+        var decoders = [];
+        var dataStack = [];
+
+        var ENCODE = 1;
+        var DECODE = 2;
+        var command = {};
+
+        function decode(id){
+            var data = dataStack[id]
+            var decoder = decoders[id];
+            decoder.postMessage( { job:DECODE, jobId:id } );
+            decoder.postMessage( data, [data] );
+            //decoder.postMessage(data.buffer); for IE, since it is not implemented transferable ArrayBuffer
+        }
+        function init(){
+            for(var i=0; i < 4; i++){
+                var reader = new FileReader();
+                reader.id = i;
+                var decoder = new Worker('../build/LZMAWorker.min.js');
+                var fileInput = document.getElementById("fileBrowser"+i);
+
+                reader.onload = function(e){
+                    dataStack[e.currentTarget.id] = e.target.result;
+                }
+
+                fileInput.onchange = function(e){
+                    readers[e.currentTarget.attributes.index.value].readAsArrayBuffer(this.files[0]);
+                }
+
+                decoder.onmessage = handleWorkerMessage;
+
+                readers.push(reader);
+                decoders.push(decoder);
+            }
+        }
+        function startDecoding(){
+            for(var i=0; i < 4; i++){
+                if(dataStack[i]) {
+                    console.log('Encoded bytes:' + dataStack[i].byteLength);
+                    decode(i);
+                }
+            }
+        }
+        function handleWorkerMessage(e){
+            if(this.command == null){
+                this.command = e.data;
+            }else if(this.command.job == ENCODE){
+                this.command == null;//encode not implemented
+            }else if(this.command.job == DECODE){
+                this.command == null;
+                decodeComplete(this.command.jobId, e.data, this.command.time);
+            }
+        }
+        function decodeComplete(id,result,time) {
+            var outData = new Uint8Array(result);
+            console.log('Thread :'+id+', Decode time:' +  (time / 1000) + ' seconds');
+            console.log('Decoded bytes:' + outData.length);
+        }
+    </script>
+</head>
+<body onload="init()">
+<b>-------------------------------------------------------------<br>
+        LZMA Parallel Decoding      <br>
+-------------------------------------------------------------</b><br>
+Thread 1:<input type="file" id="fileBrowser0" index="0"/><br>
+Thread 2:<input type="file" id="fileBrowser1" index="1"/><br>
+Thread 3:<input type="file" id="fileBrowser2" index="2"/><br>
+Thread 4:<input type="file" id="fileBrowser3" index="3"/><br><br>
+<button id="start" onclick="startDecoding()">Start decoding</button><br><br>
+Open console to see results<br>
+<p>
+    <b>How to make lzma file?<br></b>
+    Download lzma sdk (<a href="http://www.7-zip.org/sdk.html">http://www.7-zip.org/sdk.html</a>)<br>
+    and use following command<br><br>
+    <b><i>lzma e input_filename.extension output_filename.lzma</i></b>
+</p>
+Note: Performance is very poor in Google Chrome<br>
+-------------------------------------------------------------<br>
+<div style="font-size: 12px">Developed by Nidin Vinayakan</div>
+</body>
+</html>

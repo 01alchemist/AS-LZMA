@@ -1,0 +1,46 @@
+Open3DProject - OPEN SOURCE 3D CONTENT LICENSE (last edit June 2005) 
+The following text refers to the intellectual property contributed by various contributors for 3D content available by the Open3DProject. The design of this license is to give the licensee as much freedom as possible to modify and distribute derivatives for Open Source 3D Content without infringing upon the intellectual rights, trade marking, and product identity of contributors of the Open3DProject. This license is not limited specifically to models, UV maps, and 3D content for Open3DProject Models. In addition, the wording and conditions of this license are Copyrighted 2005 by e-Frontier (www.e-frontier.com), Zygote Media Group (www.zygote.com), Sixus 1 Media (www.sixus1media.com) and other contributors. All Rights Reserved.
+
+You should read all of the conditions of this license before you install for personal use or edit the Open Source 3D Content in any way.
+
+
+1. Definitions: 
+(a) "Contributors" means the copyright, intellectual property and/or trademark owners who have contributed open source 3D content, including original content as well as Derivative Material;
+
+(b) "Open Source 3D Content" means the mechanics of the figure, prop, clothing or other 3D content and includes the methods, procedures, processes and routines to the extent such content is an enhancement over the prior art and any additional content clearly identified as Open Source 3D Content by the Contributor, and means any work covered by this License, including translations and derivative works under copyright law;
+
+(c) "Trademark" means the logos, slogans, tag-lines, names, mark, sign, motto, designs that are used by a Contributor to identify itself or its products or the associated products contributed to the Open Source 3D Content License by the Contributor.
+
+(d) "Distribute" means to reproduce, lease, sell, license, rent, publicly display, transmit, broadcast or otherwise distribute; 
+
+(e) "Derivative Material" means any copyrighted material including derivative works and translations (including into other 3D model formats), modification, correction, addition, upgrade, improvement, extension, compilation, abridgment or other form in which an existing work may be transformed, adapted or recast;
+
+(f) "Use", "Used" or "Using" means to use, Distribute, copy, edit, morph, render, animate, format, modify, translate and otherwise create Derivative Material of Open Source 3D Content. 
+
+(g) "Your" or "You" means the licensee in terms of this agreement whether an individual or a company.
+
+2. Offer and Acceptance: By Using the Open Source 3D Content You indicate Your unconditional acceptance of the terms of this License.
+
+3. The License: This License applies to any Open Source 3D Content that contains a notice indicating that the Open Source 3D Content may only be Used under and in terms of this License. You must affix such a notice to any Open Source 3D Content that you Use. No terms may be added to or subtracted from this License or applied to any Open Source 3D Content distributed using this Licensse except as described by the License itself. 
+
+4. License Grant and Consideration: In consideration for agreeing to use this License, the Contributors grant You a non-exclusive, perpetual, royalty-free, worldwide, license with the exact terms of this License to Use, the Open Source 3D Content.
+
+5. Notice of Copyright: You must include a COPYRIGHT NOTICE in the documentation of any Open Source 3D Content You are copying, modifying or distributing, and You must add the title, the copyright date, the copyright holder's name and the URL of where the original files were obtained to the COPYRIGHT NOTICE of any derivative works created using the Open Source 3D Content that you Distribute.
+
+6. Representation of Authority to Contribute: If You are contributing original material as Open Source 3D Content, You represent that Your Contributions are Your original creation and/or You have sufficient rights to grant the rights conveyed by this License.
+
+7. Identification: If you distribute Open Source 3D Content You must clearly indicate which portions of the work that you are distributing are Open Source 3D Content.
+
+8. Updating the License: Open3DProject or its designated Agents may publish updated versions of this License. You may use any authorized version of this License to copy, modify and distribute any Open Source 3D Content originally distributed under any version of this License.
+
+9. Copy of this License: You MUST include a copy of this License with every copy of the Open Source 3D Content You Distribute if no other License is required for a particular channel of distribution. If you are distributing the base open source files unaltered, then you must include this license exactly as is.
+
+10. Use of Contributor Credits: You may not market or advertise the Open Source 3D Content using the name of any Contributor unless You have express written permission from the Contributor to do so.
+
+11. Inability to Comply: If it is impossible for You to comply with any of the terms of this License with respect to some or all of the Open Source 3D Content due to statute, judicial order, or governmental regulation then You may not Use any Open Source Material so affected.
+
+12. Termination: This License will terminate automatically if You fail to comply with all terms herein and fail to cure such breach within 30 days of becoming aware of the breach. All sublicenses shall survive the termination of this License.
+
+13. Reformation: If any provision of this License is held to be unenforceable, such provision shall be reformed only to the extent necessary to make it enforceable.
+
+14. Source Files Download: The original source files and documentation for the Open3DProject can be found at Sixus1Media.com

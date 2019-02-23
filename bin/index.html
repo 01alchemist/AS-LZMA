@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>LZMA Decoder by Nidin Vinayakan</title>
+    <style>
+        body,input{
+            font-family: courier;
+        }
+    </style>
+    <script src="../build/LZMA.js"></script>
+    <script>
+        var file;
+        var file2;
+        var reader = new FileReader();
+        var reader2 = new FileReader();
+        var decoder = new Worker('../build/LZMAWorker.min.js');
+        var decoder2 = new nid.LZMA();
+        var ENCODE = 1;
+        var DECODE = 2;
+        var command = null;
+
+        reader.onload = function(e){
+            var inData = new Uint8Array(e.target.result);
+            console.log('Encoded bytes:'+inData.length);
+            var time = Date.now();
+            decode(inData,function(result){
+                var outData = new Uint8Array(result);
+                console.log('Decode time:'+(Date.now() - time)/1000+' seconds');
+                console.log('Decoded bytes:'+outData.length);
+            });
+        }
+        reader2.onload = function(e){
+            var inData = new Uint8Array(e.target.result);
+            console.log('Encoded bytes:'+inData.length);
+            var time = Date.now();
+            var result = decoder2.decode(inData);
+            var outData = new Uint8Array(result.buffer);
+            console.log('Decode time:'+(Date.now() - time)/1000+' seconds');
+            console.log('Decoded bytes:'+outData.length);
+        }
+        function decode(data,callback){
+
+            decoder.onmessage = function(e){
+                if(this.command == null){
+                    this.command = e.data;
+                }else if(this.command.job == ENCODE){
+                    this.command == null;//encode not implemented
+                }else if(this.command.job == DECODE){
+                    this.command == null;
+                    callback(e.data);
+                }
+            }
+
+            decoder.postMessage({ job:DECODE, jobId:0 })
+            decoder.postMessage(data.buffer,[data.buffer]);
+            //decoder.postMessage(data.buffer); for IE, since it is not implemented transferable ArrayBuffer
+        }
+        function init(){
+            var fileInput = document.getElementById("fileBrowser");
+            var fileInput2 = document.getElementById("fileBrowser2");
+            fileInput.onchange = function(e){
+                file = this.files[0];
+                reader.readAsArrayBuffer(file);
+            }
+            fileInput2.onchange = function(e){
+                file2 = this.files[0];
+                reader2.readAsArrayBuffer(file2);
+            }
+        }
+    </script>
+</head>
+<body onload="init()">
+<b>-------------------------------------------------------------<br>
+        LZMA Decoder      <br>
+-------------------------------------------------------------</b><br>
+Option 1: With worker (recommended) :<input type="file" id="fileBrowser"/> <br>
+Option 2: With out worker:<input type="file" id="fileBrowser2"/><br><br>
+Open console to see results<br>
+<p>
+    <b>How to make lzma file?<br></b>
+    Download lzma sdk (<a href="http://www.7-zip.org/sdk.html">http://www.7-zip.org/sdk.html</a>)<br>
+    and use following command<br><br>
+    <b><i>lzma e input_filename.extension output_filename.lzma</i></b>
+</p>
+Note: Performance is very poor in Google Chrome<br>
+-------------------------------------------------------------<br>
+<div style="font-size: 12px">Developed by Nidin Vinayakan</div>
+</body>
+</html>

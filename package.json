@@ -1,0 +1,35 @@
+{
+    "name": "as-lzma",
+    "version": "1.0.0",
+    "description": "LZMA Decoder written in AssemblyScript",
+    "main": "src/lzma/LZMA.ts",
+    "scripts": {
+        "test": "jest",
+        "tdd": "jest --watch",
+        "build:untouched": "asc src/lzma/lzma.ts -b build/untouched.wasm -t build/untouched.wat --sourceMap --importMemory --mutable-global --threds",
+        "build:optimized": "asc src/lzma/lzma.ts -b build/optimized.wasm -t build/optimized.wat -O3 --noAssert --importMemory --mutable-global --threds",
+        "build": "npm run build:untouched && npm run build:optimized",
+        "watch": "nodemon --exec 'yarn build:untouched' --watch src/lzma -e ts"
+    },
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/01alchemist/AS-LZMA.git"
+    },
+    "keywords": [
+        "LZMA",
+        "data",
+        "compression",
+        "javascript",
+        "assemblyscript",
+        "webassembly"
+    ],
+    "author": "Nidin Vinayakan",
+    "license": "MIT",
+    "bugs": {
+        "url": "https://github.com/01alchemist/AS-LZMA/issues"
+    },
+    "dependencies": {},
+    "devDependencies": {
+        "assemblyscript": "AssemblyScript/assemblyscript"
+    }
+}
