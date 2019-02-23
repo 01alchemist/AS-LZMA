@@ -8,7 +8,7 @@ import { RangeDecoder } from './range-decoder'
  */
 
 export class LenDecoder {
-    private choice: i32
+    private choice: u16[]
     private lowCoder: Array<BitTreeDecoder> //3
     private midCoder: Array<BitTreeDecoder> //3
     private highCoder: BitTreeDecoder //8

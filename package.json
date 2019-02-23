@@ -6,10 +6,10 @@
     "scripts": {
         "test": "jest",
         "tdd": "jest --watch",
-        "build:untouched": "asc src/lzma/lzma.ts -b build/untouched.wasm -t build/untouched.wat --sourceMap --importMemory --mutable-global --threds",
-        "build:optimized": "asc src/lzma/lzma.ts -b build/optimized.wasm -t build/optimized.wat -O3 --noAssert --importMemory --mutable-global --threds",
+        "build:untouched": "asc src/index.ts -b build/untouched.wasm -t build/untouched.wat --debug --sourceMap --importMemory --enable mutable-global",
+        "build:optimized": "asc src/index.ts -b build/optimized.wasm -t build/optimized.wat -O3 --noAssert --importMemory --enable mutable-global",
         "build": "npm run build:untouched && npm run build:optimized",
-        "watch": "nodemon --exec 'yarn build:untouched' --watch src/lzma -e ts"
+        "watch": "nodemon --exec 'npm run build:untouched' --watch src/lzma -e ts"
     },
     "repository": {
         "type": "git",

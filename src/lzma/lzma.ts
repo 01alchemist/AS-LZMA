@@ -1,3 +1,4 @@
+import "allocator/arena";
 import { LzmaDecoder } from './lzma-decoder'
 import { RangeDecoder } from './range-decoder'
 'use strict'
@@ -7,14 +8,14 @@ import { RangeDecoder } from './range-decoder'
  */
 
 export class LZMA {
-    static LZMA_DIC_MIN: i32 = 1 << 12
-    static LZMA_RES_ERROR: i32 = 0
-    static LZMA_RES_FINISHED_WITH_MARKER: i32 = 1
-    static LZMA_RES_FINISHED_WITHOUT_MARKER: i32 = 2
-    static kNumBitModelTotalBits: i32 = 11
-    static kNumMoveBits: i32 = 5
-    static PROB_INIT_VAL: i32 = (1 << LZMA.kNumBitModelTotalBits) / 2 //1024
-    static kNumPosBitsMax: i32 = 4
+    static LZMA_DIC_MIN: u32 = 1 << 12
+    static LZMA_RES_ERROR: u32 = 0
+    static LZMA_RES_FINISHED_WITH_MARKER: u32 = 1
+    static LZMA_RES_FINISHED_WITHOUT_MARKER: u32 = 2
+    static kNumBitModelTotalBits: u16 = 11
+    static kNumMoveBits: u8 = 5
+    static PROB_INIT_VAL: u16 = (1 << LZMA.kNumBitModelTotalBits) / 2 //1024
+    static kNumPosBitsMax: u8 = 4
 
     static kNumStates: i32 = 12
     static kNumLenToPosStates: i32 = 4
@@ -27,12 +28,12 @@ export class LZMA {
     public decoder: LzmaDecoder
     public data: Uint8Array
 
-    static INIT_PROBS(p: Uint16Array): void {
+    static INIT_PROBS(p: u16[]): void {
         for (var i: i32 = 0; i < p.length; i++) {
             p[i] = this.PROB_INIT_VAL
         }
     }
-    static BitTreeReverseDecode(probs: Uint16Array, numBits: i32, rc: RangeDecoder, offset: i32 = 0): i32 {
+    static BitTreeReverseDecode(probs: u16[], numBits: i32, rc: RangeDecoder, offset: i32 = 0): i32 {
         var m: i32 = 1
         var symbol: i32 = 0
         for (var i: i32 = 0; i < numBits; i++) {
@@ -45,6 +46,24 @@ export class LZMA {
     }
     constructor() {
         this.decoder = new LzmaDecoder()
+    }
+    public unpackSize(data: Uint8Array): i32 {
+        var header: Uint8Array = new Uint8Array(13)
+        var i: i32 //int
+        for (i = 0; i < 13; i++) {
+            header[i] = data[i]
+        }
+
+        var unpackSize: i32 = 0 //UInt64
+        var unpackSizeDefined: boolean = false
+        for (i = 0; i < 8; i++) {
+            var b: i32 = header[5 + i]
+            if (b != 0xff) {
+                unpackSizeDefined = true
+            }
+            unpackSize |= b << (8 * i)
+        }
+        return unpackSize
     }
     public decode(data: Uint8Array): Uint8Array {
         this.data = data
@@ -103,7 +122,7 @@ export class LZMA {
         }
 
         if (this.decoder.rangeDec.corrupted) {
-            console.log('Warning: LZMA stream is corrupted')
+            // console.log('Warning: LZMA stream is corrupted')
         }
         return this.decoder.outWindow.outStream
     }

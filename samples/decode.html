@@ -1,0 +1,47 @@
+<html>
+  <head>
+    <title>AssemblyScript LZMA Decoder</title>
+    <script src="./decode.js"></script>
+  </head>
+  <body>
+    <script>
+      var memory = new WebAssembly.Memory({
+        initial: 1024,
+      })
+
+      async function init() {
+        const rawData = new Uint8Array(
+          await (await fetch('zygote_male_w_repro.obj')).arrayBuffer(),
+        )
+        const lzmaCompressedData = new Uint8Array(
+          await (await fetch('zygote_male_w_repro.lzma')).arrayBuffer(),
+        )
+
+        fetch('../build/untouched.wasm')
+          .then(response => response.arrayBuffer())
+          .then(buffer =>
+            WebAssembly.instantiate(buffer, {
+              index1: { logi: i => console.log(i) },
+              env: {
+                memory,
+                abort: (filename, line, column) => {
+                  throw Error(
+                    `abort called at ${
+                      filename ? filename + ':' : ''
+                    }${line}:${column}`,
+                  )
+                },
+              },
+              Math,
+            }),
+          )
+          .then(module => {
+            var lzma = module.instance.exports
+            const result = decode(lzma, memory, lzmaCompressedData, rawData)
+            console.log(result)
+          })
+      }
+      init()
+    </script>
+  </body>
+</html>

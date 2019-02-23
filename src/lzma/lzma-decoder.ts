@@ -3,7 +3,6 @@ import { OutWindow } from './out-window';
 import { BitTreeDecoder } from './bit-tree-decoder';
 import { LenDecoder } from './len-decoder';
 import { LZMA } from './lzma';
-import { MEMORY } from '../memory';
 
 /**
  * LZMA Decoder
@@ -17,23 +16,23 @@ export class LzmaDecoder {
     public outWindow: OutWindow //OutWindow
     public lc: i32
     public pb: i32
-    public lp: i32 //unsigned byte
-    public dictSize: i32 //UInt32
-    public dictSizeInProperties: i32 //UInt32
+    public lp: u8 //unsigned byte
+    public dictSize: u32 //UInt32
+    public dictSizeInProperties: u8 //UInt32
 
     //Private
-    private litProbs: Uint16Array
+    private litProbs: u16[]
 
     private posSlotDecoder: Array<BitTreeDecoder>
     private alignDecoder: BitTreeDecoder
-    private posDecoders: Uint16Array
+    private posDecoders: u16[]
 
-    private isMatch: Uint16Array
-    private isRep: Uint16Array
-    private isRepG0: Uint16Array
-    private isRepG1: Uint16Array
-    private isRepG2: Uint16Array
-    private isRep0Long: Uint16Array
+    private isMatch: u16[]
+    private isRep: u16[]
+    private isRepG0: u16[]
+    private isRepG1: u16[]
+    private isRepG2: u16[]
+    private isRep0Long: u16[]
 
     private lenDecoder: LenDecoder
     private repLenDecoder: LenDecoder
@@ -51,14 +50,14 @@ export class LzmaDecoder {
     constructor() {
         this.posSlotDecoder = BitTreeDecoder.constructArray(6, LZMA.kNumLenToPosStates) //6
         this.alignDecoder = new BitTreeDecoder(LZMA.kNumAlignBits)
-        this.posDecoders = new Uint16Array(1 + LZMA.kNumFullDistances - LZMA.kEndPosModelIndex)
+        this.posDecoders = new Array<u16>(1 + LZMA.kNumFullDistances - LZMA.kEndPosModelIndex)
 
-        this.isMatch = new Uint16Array(LZMA.kNumStates << LZMA.kNumPosBitsMax)
-        this.isRep = new Uint16Array(LZMA.kNumStates)
-        this.isRepG0 = new Uint16Array(LZMA.kNumStates)
-        this.isRepG1 = new Uint16Array(LZMA.kNumStates)
-        this.isRepG2 = new Uint16Array(LZMA.kNumStates)
-        this.isRep0Long = new Uint16Array(LZMA.kNumStates << LZMA.kNumPosBitsMax)
+        this.isMatch = new Array<u16>(LZMA.kNumStates << LZMA.kNumPosBitsMax)
+        this.isRep = new Array<u16>(LZMA.kNumStates)
+        this.isRepG0 = new Array<u16>(LZMA.kNumStates)
+        this.isRepG1 = new Array<u16>(LZMA.kNumStates)
+        this.isRepG2 = new Array<u16>(LZMA.kNumStates)
+        this.isRep0Long = new Array<u16>(LZMA.kNumStates << LZMA.kNumPosBitsMax)
 
         this.lenDecoder = new LenDecoder()
         this.repLenDecoder = new LenDecoder()
@@ -67,14 +66,6 @@ export class LzmaDecoder {
     }
 
     public init(): void {
-        this.loc1 = MEMORY.getUint32() | 0
-        this.loc2 = MEMORY.getUint32() | 0
-        this.matchBitI = MEMORY.getUint16() | 0
-        this.matchByteI = MEMORY.getUint16() | 0
-        this.bitI = MEMORY.getUint16() | 0
-        this.symbolI = MEMORY.getUint16() | 0
-        this.prevByteI = MEMORY.getUint16() | 0
-        this.litStateI = MEMORY.getUint16() | 0
 
         this.initLiterals()
         this.initDist()
@@ -95,7 +86,7 @@ export class LzmaDecoder {
     }
     //Private
     private createLiterals(): void {
-        this.litProbs = new Uint16Array(0x300 << (this.lc + this.lp))
+        this.litProbs = new Array<u16>(0x300 << (this.lc + this.lp))
     }
     private initLiterals(): void {
         var num: i32 = 0x300 << (this.lc + this.lp) //UInt32
@@ -103,36 +94,36 @@ export class LzmaDecoder {
             this.litProbs[i] = LZMA.PROB_INIT_VAL
         }
     }
-    private decodeLiteral(state, rep0): void {
+    private decodeLiteral(state:u8, rep0:u32): void {
         //unsigned , UInt32
-        MEMORY.u16[this.prevByteI] = 0 //unsigned byte
-        if (!this.outWindow.isEmpty()) MEMORY.u16[this.prevByteI] = this.outWindow.getByte(1)
+        this.prevByteI = 0 //unsigned byte
+        if (!this.outWindow.isEmpty()) this.prevByteI = this.outWindow.getByte(1)
 
-        MEMORY.u16[this.symbolI] = 1
-        MEMORY.u16[this.litStateI] =
+        this.symbolI = 1
+        this.litStateI =
             ((this.outWindow.totalPos & ((1 << this.lp) - 1)) << this.lc) +
-            (MEMORY.u16[this.prevByteI] >>> (8 - this.lc))
-        var probsOffset: i32 = (0x300 * MEMORY.u16[this.litStateI]) | 0
+            (this.prevByteI >>> (8 - this.lc))
+        var probsOffset: i32 = (0x300 * this.litStateI) | 0
 
         if (state >= 7) {
-            MEMORY.u16[this.matchByteI] = this.outWindow.getByte(rep0 + 1)
+            this.matchByteI = this.outWindow.getByte(rep0 + 1)
             do {
-                MEMORY.u16[this.matchBitI] = (MEMORY.u16[this.matchByteI] >>> 7) & 1
-                MEMORY.u16[this.matchByteI] <<= 1
-                MEMORY.u16[this.bitI] = this.rangeDec.decodeBit(
+                this.matchBitI = (this.matchByteI >>> 7) & 1
+                this.matchByteI <<= 1
+                this.bitI = this.rangeDec.decodeBit(
                     this.litProbs,
-                    probsOffset + ((1 + MEMORY.u16[this.matchBitI]) << 8) + MEMORY.u16[this.symbolI],
+                    probsOffset + ((1 + this.matchBitI) << 8) + this.symbolI,
                 )
-                MEMORY.u16[this.symbolI] = (MEMORY.u16[this.symbolI] << 1) | MEMORY.u16[this.bitI]
-                if (MEMORY.u16[this.matchBitI] != MEMORY.u16[this.bitI]) break
-            } while (MEMORY.u16[this.symbolI] < 0x100)
+                this.symbolI = (this.symbolI << 1) | this.bitI
+                if (this.matchBitI != this.bitI) break
+            } while (this.symbolI < 0x100)
         }
-        while (MEMORY.u16[this.symbolI] < 0x100) {
-            MEMORY.u16[this.symbolI] =
-                (MEMORY.u16[this.symbolI] << 1) |
-                this.rangeDec.decodeBit(this.litProbs, probsOffset + MEMORY.u16[this.symbolI])
+        while (this.symbolI < 0x100) {
+            this.symbolI =
+                (this.symbolI << 1) |
+                this.rangeDec.decodeBit(this.litProbs, probsOffset + this.symbolI)
         }
-        this.outWindow.putByte(MEMORY.u16[this.symbolI] - 0x100)
+        this.outWindow.putByte(this.symbolI - 0x100)
     }
 
     private decodeDistance(len: i32): i32 {
@@ -144,20 +135,20 @@ export class LzmaDecoder {
         if (posSlot < 4) return posSlot
 
         var numDirectBits = (posSlot >>> 1) - 1 //unsigned byte
-        MEMORY.u32[this.loc1] = (2 | (posSlot & 1)) << numDirectBits //UInt32
+        this.loc1 = (2 | (posSlot & 1)) << numDirectBits //UInt32
         if (posSlot < LZMA.kEndPosModelIndex) {
-            MEMORY.u32[this.loc1] += LZMA.BitTreeReverseDecode(
+            this.loc1 += LZMA.BitTreeReverseDecode(
                 this.posDecoders,
                 numDirectBits,
                 this.rangeDec,
-                MEMORY.u32[this.loc1] - posSlot,
+                this.loc1 - posSlot,
             )
         } else {
-            MEMORY.u32[this.loc1] +=
+            this.loc1 +=
                 this.rangeDec.decodeDirectBits(numDirectBits - LZMA.kNumAlignBits) << LZMA.kNumAlignBits
-            MEMORY.u32[this.loc1] += this.alignDecoder.reverseDecode(this.rangeDec)
+            this.loc1 += this.alignDecoder.reverseDecode(this.rangeDec)
         }
-        return MEMORY.u32[this.loc1]
+        return this.loc1
     }
     private initDist(): void {
         for (var i = 0; i < LZMA.kNumLenToPosStates; i++) {
@@ -182,7 +173,7 @@ export class LzmaDecoder {
         this.lp = prop[3]
 
         this.dictSizeInProperties = 0
-        for (var i: i32 = 0; i < 4; i++) {
+        for (var i: u8 = 0; i < 4; i++) {
             this.dictSizeInProperties |= properties[i + 1] << (8 * i)
         }
 
@@ -192,18 +183,18 @@ export class LzmaDecoder {
             this.dictSize = LZMA.LZMA_DIC_MIN
         }
     }
-    private updateState_Literal(state: i32): i32 {
+    private updateState_Literal(state: u8): u8 {
         if (state < 4) return 0
         else if (state < 10) return state - 3
         else return state - 6
     }
-    private updateState_ShortRep(state: i32): i32 {
+    private updateState_ShortRep(state: u8): u8 {
         return state < 7 ? 9 : 11
     }
-    private updateState_Rep(state: i32): i32 {
+    private updateState_Rep(state: u8): u8 {
         return state < 7 ? 8 : 11
     }
-    private updateState_Match(state: i32): i32 {
+    private updateState_Match(state: u8): u8 {
         return state < 7 ? 7 : 10
     }
 
@@ -213,14 +204,14 @@ export class LzmaDecoder {
         this.rangeDec.init()
 
         if (unpackSizeDefined) {
-            this.outWindow.outStream = new Uint8Array(new ArrayBuffer(unpackSize))
+            this.outWindow.outStream = new Uint8Array(unpackSize)
         }
 
-        var rep0 = 0,
-            rep1 = 0,
-            rep2 = 0,
-            rep3 = 0 //UInt32
-        var state = 0 //unsigned byte
+        var rep0:u32 = 0,
+            rep1:u32 = 0,
+            rep2:u32 = 0,
+            rep3:u32 = 0 //UInt32
+        var state:u8 = 0 //unsigned byte
 
         for (;;) {
             if (unpackSizeDefined && unpackSize == 0 && !this.markerIsMandatory) {
@@ -305,5 +296,6 @@ export class LzmaDecoder {
                 return LZMA.LZMA_RES_ERROR
             }
         }
+        return 0;
     }
 }

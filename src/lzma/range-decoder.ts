@@ -3,7 +3,7 @@
  * @author Nidin Vinayakan
  */
 export class RangeDecoder {
-    static kTopValue: i32 = 1 << 24
+    static kTopValue: u32 = 1 << 24
 
     public inStream: Uint8Array
     public corrupted: boolean
@@ -16,7 +16,7 @@ export class RangeDecoder {
     private loc1: i32 = 2
     private loc2: i32 = 3
     private U32: Uint32Array
-    private U16: Uint16Array
+    private U16: u16[]
 
     constructor() {
         this.in_pos = 13
@@ -26,7 +26,7 @@ export class RangeDecoder {
     }
     public init(): void {
         this.U32 = new Uint32Array(4)
-        this.U16 = new Uint16Array(4)
+        this.U16 = new Array<u16>(4)
         this.corrupted = false
 
         if (this.inStream[this.in_pos++] != 0) {
@@ -71,7 +71,7 @@ export class RangeDecoder {
         return this.U32[this.loc1]
     }
 
-    public decodeBit(prob: Uint16Array, index: i32): i32 {
+    public decodeBit(prob: u16[], index: i32): i32 {
         this.U16[0] = prob[index]
         //bound
         this.U32[2] = (this.U32[0] >>> 11) * this.U16[0]
