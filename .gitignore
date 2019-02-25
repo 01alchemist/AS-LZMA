@@ -1,3 +1,5 @@
 .history
 node_modules
 .vscode
+lzma-sdk
+build

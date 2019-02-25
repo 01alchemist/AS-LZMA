@@ -8,7 +8,7 @@ import { RangeDecoder } from './range-decoder'
  */
 
 export class LenDecoder {
-    private choice: u16[]
+    private choice: Uint16Array
     private lowCoder: Array<BitTreeDecoder> //3
     private midCoder: Array<BitTreeDecoder> //3
     private highCoder: BitTreeDecoder //8
@@ -20,13 +20,16 @@ export class LenDecoder {
     }
 
     public init(): void {
-        this.choice = [LZMA.PROB_INIT_VAL, LZMA.PROB_INIT_VAL]
+        this.choice = new Uint16Array(2)
+        this.choice.__unchecked_set(0, LZMA.PROB_INIT_VAL)
+        this.choice.__unchecked_set(1, LZMA.PROB_INIT_VAL)
         this.highCoder.init()
         for (var i: i32 = 0; i < 1 << LZMA.kNumPosBitsMax; i++) {
             this.lowCoder[i].init()
             this.midCoder[i].init()
         }
     }
+    
     public decode(rc: RangeDecoder, posState: i32): i32 {
         if (rc.decodeBit(this.choice, 0) == 0) {
             return this.lowCoder[posState].decode(rc)

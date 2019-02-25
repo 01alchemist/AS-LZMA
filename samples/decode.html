@@ -9,39 +9,63 @@
         initial: 1024,
       })
 
+      const rawFile = 'iron-man.obj'
+      const compressedFile = 'iron-man.obj.lzma'
+      // const rawFile = 'test.txt'
+      // const compressedFile = 'test.lzma'
       async function init() {
         const rawData = new Uint8Array(
-          await (await fetch('zygote_male_w_repro.obj')).arrayBuffer(),
+          await (await fetch(rawFile)).arrayBuffer()
         )
         const lzmaCompressedData = new Uint8Array(
-          await (await fetch('zygote_male_w_repro.lzma')).arrayBuffer(),
+          await (await fetch(compressedFile)).arrayBuffer()
         )
 
-        fetch('../build/untouched.wasm')
+        fetch('../build/optimized.wasm')
           .then(response => response.arrayBuffer())
           .then(buffer =>
             WebAssembly.instantiate(buffer, {
-              index1: { logi: i => console.log(i) },
+              'out-window': {
+                logi: i => console.log(i === -1 ? '-----' : i),
+              },
               env: {
                 memory,
                 abort: (filename, line, column) => {
                   throw Error(
                     `abort called at ${
                       filename ? filename + ':' : ''
-                    }${line}:${column}`,
+                    }${line}:${column}`
                   )
                 },
               },
               Math,
-            }),
+            })
           )
-          .then(module => {
+          .then(async module => {
             var lzma = module.instance.exports
-            const result = decode(lzma, memory, lzmaCompressedData, rawData)
-            console.log(result)
+            decode(lzma, memory, lzmaCompressedData, rawData)
+            // lzma.reset()
+            // await sleep();
+            // decode(lzma, memory, lzmaCompressedData, rawData)
+            // lzma.reset()
+            // await sleep();
+            // decode(lzma, memory, lzmaCompressedData, rawData)
+            // lzma.reset()
+            // await sleep();
+            // decode(lzma, memory, lzmaCompressedData, rawData)
+            // lzma.reset()
+            // await sleep();
+            // decode(lzma, memory, lzmaCompressedData, rawData)
           })
       }
       init()
+      async function sleep(time = 1000) {
+        return new Promise(function(resolve) {
+          setTimeout(() => {
+            resolve()
+          }, time);
+        })
+      }
     </script>
   </body>
 </html>

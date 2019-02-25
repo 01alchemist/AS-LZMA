@@ -6,28 +6,36 @@ import { LZMA } from './lzma';
  * @author Nidin Vinayakan
  */
 export class BitTreeDecoder {
-    public probs: u16[]
-    private numBits: i32
+    public probs: Uint16Array
+    private numBits: u32
 
-    constructor(numBits:i32) {
+    constructor(numBits:u32) {
         this.numBits = numBits
-        this.probs = new Array<u16>(1 << this.numBits)
+        this.probs = new Uint16Array(1 << this.numBits)
     }
+    
+    @inline
     public init(): void {
         LZMA.INIT_PROBS(this.probs)
     }
-    public decode(rc: RangeDecoder): i32 {
-        var m: i32 = 1 //Uint16
-        for (var i: i32 = 0; i < this.numBits; i++) m = (m << 1) + rc.decodeBit(this.probs, m)
+
+    @inline
+    public decode(rc: RangeDecoder): u32 {
+        var m: u32 = 1 //Uint16
+        for (var i: u32 = 0; i < this.numBits; i++) m = (m << 1) + rc.decodeBit(this.probs, m)
         return m - (1 << this.numBits)
     }
+    
+    @inline
     public reverseDecode(rc: RangeDecoder): i32 {
         return LZMA.BitTreeReverseDecode(this.probs, this.numBits, rc)
     }
+
+    @inline
     static constructArray(numBits: i32, len: i32): Array<BitTreeDecoder> {
         var vec: BitTreeDecoder[] = new Array<BitTreeDecoder>(len)
         for (var i: i32 = 0; i < len; i++) {
-            vec[i] = new BitTreeDecoder(numBits)
+            vec.__unchecked_set(i, new BitTreeDecoder(numBits))
         }
         return vec
     }
