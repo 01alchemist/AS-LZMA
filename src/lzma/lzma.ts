@@ -9,7 +9,7 @@ import { RangeDecoder } from './range-decoder'
 
 export class DecodeResult {
     
-    constructor(public success:u32, public errorCode:u32, public unpackSize:i32, public data:Uint8Array) {
+    constructor(public success:bool, public errorCode:u32, public unpackSize:i32, public data:Uint8Array) {
     }
 }
 

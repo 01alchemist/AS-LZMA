@@ -54,8 +54,8 @@ export class OutWindow {
 
         let tmp_ptr = <usize>tmp;
         let AB_ptr = load<u32>(tmp_ptr, 0);
-        __memory_free(AB_ptr);
-        __memory_free(tmp_ptr)
+        memory.free(AB_ptr);
+        memory.free(tmp_ptr)
     }
 
     public trim(): Uint8Array {

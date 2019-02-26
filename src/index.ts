@@ -3,7 +3,7 @@ import { LZMA, DecodeResult } from './lzma/lzma'
 var lzma = new LZMA()
 
 export function reset(): void {
-  __memory_reset()
+  memory.reset()
   lzma = new LZMA()
 }
 export function newU8Array(len: i32): Uint8Array {

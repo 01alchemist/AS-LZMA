@@ -30,6 +30,7 @@
     },
     "dependencies": {},
     "devDependencies": {
-        "assemblyscript": "AssemblyScript/assemblyscript"
+        "assemblyscript": "AssemblyScript/assemblyscript",
+        "jest": "^24.1.0"
     }
 }
