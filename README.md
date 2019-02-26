@@ -1,13 +1,16 @@
 LZMA Decoder (AssemblyScript)
 ============
+
 This is an experimental lzma decoder written in [AssemblyScript](https://github.com/AssemblyScript/assemblyscript)
 
 Example
 -------
+
 [example code](/examples)
+
 ```javascript
 var memory = new WebAssembly.Memory({ initial: 160 })
-... 
+...
 // You know how to instantiate WASM module
 var lzma = module.instance.exports
 
@@ -57,17 +60,16 @@ console.log(result.data)
 // const text = decoder.decode(result.data)
 // console.log(text)
 
-
 ```
 
-How to make lzma file?
+How to make lzma file
 ----------------------
+
 Download [lzma sdk] and use following command
 
 ```sh
 lzma e input_filename.extension output_filename.lzma
 ```
-> Note: Performance is very poor in Google Chrome
 
 Developed by [Nidin Vinayakan]
 
@@ -75,7 +77,6 @@ License
 ----
 
 MIT
-
 
 [lzma sdk]:http://www.7-zip.org/sdk.html
 [Nidin Vinayakan]:https://github.com/nidin
