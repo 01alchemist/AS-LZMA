@@ -2,7 +2,7 @@
     "name": "as-lzma",
     "version": "1.0.0",
     "description": "LZMA Decoder written in AssemblyScript",
-    "main": "src/lzma/LZMA.ts",
+    "main": "src/index.ts",
     "scripts": {
         "test": "jest",
         "tdd": "jest --watch",
