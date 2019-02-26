@@ -9,9 +9,9 @@ import { RangeDecoder } from './range-decoder'
 
 export class LenDecoder {
     private choice: Uint16Array
-    private lowCoder: Array<BitTreeDecoder> //3
-    private midCoder: Array<BitTreeDecoder> //3
-    private highCoder: BitTreeDecoder //8
+    private lowCoder: Array<BitTreeDecoder>
+    private midCoder: Array<BitTreeDecoder>
+    private highCoder: BitTreeDecoder
 
     constructor() {
         this.lowCoder = BitTreeDecoder.constructArray(3, 1 << LZMA.kNumPosBitsMax)

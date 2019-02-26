@@ -21,7 +21,7 @@ export class BitTreeDecoder {
 
     @inline
     public decode(rc: RangeDecoder): u32 {
-        var m: u32 = 1 //Uint16
+        var m: u32 = 1
         for (var i: u32 = 0; i < this.numBits; i++) m = (m << 1) + rc.decodeBit(this.probs, m)
         return m - (1 << this.numBits)
     }

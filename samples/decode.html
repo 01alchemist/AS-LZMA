@@ -6,7 +6,7 @@
   <body>
     <script>
       var memory = new WebAssembly.Memory({
-        initial: 1024,
+        initial: 160,
       })
 
       const rawFile = 'iron-man.obj'
@@ -44,18 +44,6 @@
           .then(async module => {
             var lzma = module.instance.exports
             decode(lzma, memory, lzmaCompressedData, rawData)
-            // lzma.reset()
-            // await sleep();
-            // decode(lzma, memory, lzmaCompressedData, rawData)
-            // lzma.reset()
-            // await sleep();
-            // decode(lzma, memory, lzmaCompressedData, rawData)
-            // lzma.reset()
-            // await sleep();
-            // decode(lzma, memory, lzmaCompressedData, rawData)
-            // lzma.reset()
-            // await sleep();
-            // decode(lzma, memory, lzmaCompressedData, rawData)
           })
       }
       init()

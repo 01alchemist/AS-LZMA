@@ -57,13 +57,12 @@ export class LZMA {
 
     public unpackSize(data: Uint8Array): u32 {
         var header: Uint8Array = new Uint8Array(13)
-        // var state: Uint8Array = new Uint8Array(13)
-        var i: i32 //int
+        var i: i32
         for (i = 0; i < 13; i++) {
             header[i] = data[i]
         }
 
-        var unpackSize: u32 = 0 //UInt64
+        var unpackSize: u32 = 0
         var unpackSizeDefined: boolean = false
         for (i = 0; i < 8; i++) {
             var b: u32 = header[5 + i]
@@ -77,18 +76,13 @@ export class LZMA {
     
     public decode(data: Uint8Array): DecodeResult {
         this.data = data
-        //var header:Uint8Array = data.readUint8Array(13);
         var header: Uint8Array = new Uint8Array(13)
-        var i: i32 //int
+        var i: i32
         for (i = 0; i < 13; i++) {
             header[i] = data[i]
         }
         this.decoder.decodeProperties(header)
-        //console.log("lc="+this.decoder.lc+", lp="+this.decoder.lp+", pb="+this.decoder.pb);
-        //console.log("Dictionary Size in properties = "+this.decoder.dictSizeInProperties);
-        //console.log("Dictionary Size for decoding  = "+this.decoder.dictSize);
-        //return this.ucdata;
-        var unpackSize: u32 = 0 //UInt64
+        var unpackSize: u32 = 0
         var unpackSizeDefined: boolean = false
         for (i = 0; i < 8; i++) {
             var b: u32 = header[5 + i]
@@ -99,19 +93,11 @@ export class LZMA {
         }
 
         this.decoder.markerIsMandatory = !unpackSizeDefined
-        /*if (unpackSizeDefined){
-                console.log("Uncompressed Size : "+ unpackSize +" bytes");
-            }else{
-                console.log("End marker is expected");
-            }*/
         this.decoder.rangeDec.inStream = data
         this.decoder.create()
         // we support the streams that have uncompressed size and marker.
-        var res: i32 = this.decoder.decode(unpackSizeDefined, unpackSize) //int
+        var res: i32 = this.decoder.decode(unpackSizeDefined, unpackSize)
         
-        //console.log("Read    ", this.decoder.rangeDec.in_pos);
-        //console.log("Written ", this.decoder.outWindow.out_pos);
-
         if (res == LZMA.LZMA_RES_ERROR) {
             return new DecodeResult(false, LZMA.LZMA_RES_ERROR, null, null)
             //throw 'LZMA decoding error'
@@ -120,12 +106,12 @@ export class LZMA {
         } else if (res == LZMA.LZMA_RES_FINISHED_WITH_MARKER) {
             if (unpackSizeDefined) {
                 if (this.decoder.outWindow.out_pos != unpackSize) {
+                    return new DecodeResult(false, LZMA.LZMA_RES_ERROR, null, null)
                     //throw 'Finished with end marker before than specified size'
                 }
-                //console.log("Warning: ");
             }
-            //console.log("Finished with end marker");
         } else {
+            return new DecodeResult(false, LZMA.LZMA_RES_ERROR, null, null)
             //throw 'Internal Error'
         }
 

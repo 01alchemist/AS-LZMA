@@ -11,8 +11,8 @@ export class RangeDecoder {
     public corrupted: boolean
 
     public in_pos: i32
-    private range: u32 = 0 //UInt32
-    private code: u32 = 0 //UInt32
+    private range: u32 = 0 
+    private code: u32 = 0 
 
     constructor() {
         this.in_pos = 13
@@ -53,7 +53,7 @@ export class RangeDecoder {
 
     @inline
     public decodeDirectBits(numBits: i32): i32 {
-        var res:u32 = 0 //UInt32
+        var res:u32 = 0 
         do {
             this.range >>>= 1
             this.code -= this.range

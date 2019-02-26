@@ -15,9 +15,9 @@ export class LzmaDecoder {
     public outWindow: OutWindow //OutWindow
     public lc: i32
     public pb: i32
-    public lp: u8 //unsigned byte
-    public dictSize: u32 //UInt32
-    public dictSizeInProperties: u32 //UInt32
+    public lp: u8 
+    public dictSize: u32 
+    public dictSizeInProperties: u32 
 
     //Private
     private litProbs: Uint16Array
@@ -55,7 +55,6 @@ export class LzmaDecoder {
     }
 
     public init(): void {
-
         this.initLiterals()
         this.initDist()
 
@@ -82,7 +81,7 @@ export class LzmaDecoder {
 
     @inline
     private initLiterals(): void {
-        var num: i32 = 0x300 << (this.lc + this.lp) //UInt32
+        var num: i32 = 0x300 << (this.lc + this.lp) 
         for (var i: i32 = 0; i < num; i++) {
             this.litProbs.__unchecked_set(i, LZMA.PROB_INIT_VAL)
         }
@@ -121,15 +120,14 @@ export class LzmaDecoder {
     }
 
     private decodeDistance(len: i32): u32 {
-        //unsigned byte
-        var lenState: u32 = <u32>len //unsigned byte
+        var lenState: u32 = <u32>len 
         if (lenState > LZMA.kNumLenToPosStates - 1) lenState = LZMA.kNumLenToPosStates - 1
 
-        var posSlot:u32 = this.posSlotDecoder[lenState].decode(this.rangeDec) //unsigned byte
+        var posSlot:u32 = this.posSlotDecoder[lenState].decode(this.rangeDec) 
         if (posSlot < 4) return posSlot
 
-        var numDirectBits:u32 = (posSlot >>> 1) - 1 //unsigned byte
-        var dist:u32 = (2 | (posSlot & 1)) << numDirectBits //UInt32
+        var numDirectBits:u32 = (posSlot >>> 1) - 1 
+        var dist:u32 = (2 | (posSlot & 1)) << numDirectBits 
         if (posSlot < LZMA.kEndPosModelIndex) {
             dist += LZMA.BitTreeReverseDecode(
                 this.posDecoders,
@@ -210,7 +208,6 @@ export class LzmaDecoder {
     }
 
     public decode(unpackSizeDefined: boolean, unpackSize: i32): i32 {
-        //UInt64
         this.init()
         this.rangeDec.init()
 
@@ -223,8 +220,8 @@ export class LzmaDecoder {
         var rep0:u32 = 0,
             rep1:u32 = 0,
             rep2:u32 = 0,
-            rep3:u32 = 0 //UInt32
-        var state:u8 = 0 //unsigned byte
+            rep3:u32 = 0 
+        var state:u8 = 0 
 
         for (;;) {
             if (unpackSizeDefined && unpackSize == 0 && !this.markerIsMandatory) {
