@@ -17,6 +17,10 @@ class DecodeResult {
   }
 }
 
+function sizeInMb(data) {
+  return (data.length / (1024 * 1024)).toFixed(2)
+}
+
 function decode(lzma, memory, inputData, rawData) {
   const inputDataPtr = lzma.newU8Array(inputData.length)
   // console.log('inputDataPtr:', inputDataPtr)
@@ -34,10 +38,11 @@ function decode(lzma, memory, inputData, rawData) {
   const t1 = performance.now()
   const resultPtr = lzma.decode(inputDataPtr)
   const t2 = performance.now()
-  console.log(`[AS] Decode time: ${(t2 - t1).toFixed(2)}ms`)
   const result = new DecodeResult(resultPtr, memory)
   if (result.success) {
     const decodedData = result.data
+    console.log(`🗜%c${sizeInMb(inputData)}mb%c → 📄%c${sizeInMb(decodedData)}mb`, 'color:blue','color:black', 'color:blue');
+    console.log(`[AS] Decode time: %c${(t2 - t1).toFixed(2)}ms`, 'color:blue')
     verify(decodedData, rawData)
   } else {
     console.log('Decode failed ', result)

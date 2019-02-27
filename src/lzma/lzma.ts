@@ -14,22 +14,22 @@ export class DecodeResult {
 }
 
 export class LZMA {
-    static LZMA_DIC_MIN: u32 = 1 << 12
-    static LZMA_RES_ERROR: u32 = 0x1
-    static LZMA_RES_FINISHED_WITH_MARKER: u32 = 0x2
-    static LZMA_RES_FINISHED_WITHOUT_MARKER: u32 = 0x3
-    static kNumBitModelTotalBits: u16 = 11
-    static kNumMoveBits: u8 = 5
-    static PROB_INIT_VAL: u16 = (1 << LZMA.kNumBitModelTotalBits) / 2 //1024
-    static kNumPosBitsMax: u8 = 4
+    static readonly LZMA_DIC_MIN: u32 = 1 << 12
+    static readonly LZMA_RES_ERROR: u32 = 0x1
+    static readonly LZMA_RES_FINISHED_WITH_MARKER: u32 = 0x2
+    static readonly LZMA_RES_FINISHED_WITHOUT_MARKER: u32 = 0x3
+    static readonly kNumBitModelTotalBits: u16 = 11
+    static readonly kNumMoveBits: u8 = 5
+    static readonly PROB_INIT_VAL: u16 = (1 << LZMA.kNumBitModelTotalBits) / 2 //1024
+    static readonly kNumPosBitsMax: u8 = 4
 
-    static kNumStates: u32 = 12
-    static kNumLenToPosStates: u32 = 4
-    static kNumAlignBits: u32 = 4
-    static kStartPosModelIndex: u32 = 4
-    static kEndPosModelIndex: u32 = 14
-    static kNumFullDistances: u32 = 1 << (LZMA.kEndPosModelIndex >>> 1)
-    static kMatchMinLen: u32 = 2
+    static readonly kNumStates: u32 = 12
+    static readonly kNumLenToPosStates: u32 = 4
+    static readonly kNumAlignBits: u32 = 4
+    static readonly kStartPosModelIndex: u32 = 4
+    static readonly kEndPosModelIndex: u32 = 14
+    static readonly kNumFullDistances: u32 = 1 << (LZMA.kEndPosModelIndex >>> 1)
+    static readonly kMatchMinLen: u32 = 2
 
     public decoder: LzmaDecoder
     public data: Uint8Array

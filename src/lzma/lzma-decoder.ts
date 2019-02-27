@@ -158,7 +158,8 @@ export class LzmaDecoder {
         var p0 = properties.__unchecked_get(0)
         prop.__unchecked_set(0, p0)
         if (p0 >= 9 * 5 * 5) {
-            throw 'Incorrect LZMA properties'
+            throw 1
+            // throw 'Incorrect LZMA properties'
         }
         var p1 = p0 % 9
         prop.__unchecked_set(1, p1)
