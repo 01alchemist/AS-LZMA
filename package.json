@@ -9,7 +9,8 @@
         "build:untouched": "asc src/index.ts -b build/untouched.wasm -t build/untouched.wat --debug --sourceMap --importMemory --enable mutable-global",
         "build:optimized": "asc src/index.ts -b build/optimized.wasm -t build/optimized.wat -O3 --noAssert --importMemory --enable mutable-global",
         "build": "npm run build:untouched && npm run build:optimized",
-        "watch": "nodemon --exec 'npm run build:untouched' --watch src/lzma -e ts"
+        "watch": "nodemon --exec 'npm run build:untouched' --watch src/lzma -e ts",
+        "benchmark": "node ./benchmarks/benchmark.js"
     },
     "repository": {
         "type": "git",
@@ -31,6 +32,7 @@
     "dependencies": {},
     "devDependencies": {
         "assemblyscript": "AssemblyScript/assemblyscript",
+        "benchmark": "^2.1.4",
         "jest": "^24.1.0"
     }
 }

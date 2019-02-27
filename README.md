@@ -68,7 +68,7 @@ How to make lzma file
 Download [lzma sdk] and use following command
 
 ```sh
-lzma e input_filename.extension output_filename.lzma
+lzma -k -e input_filename.extension output_filename.lzma
 ```
 
 Developed by [Nidin Vinayakan]

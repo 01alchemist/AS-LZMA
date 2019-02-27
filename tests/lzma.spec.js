@@ -26,10 +26,10 @@ describe('optimized.wasm Tests', () => {
 
   test('Simple text decode', () => {
     const uncompressedData = new Uint8Array(
-      fs.readFileSync(path.resolve(__dirname, './resources/test.txt')),
+      fs.readFileSync(path.resolve(__dirname, '../resources/test.txt')),
     )
     const compressedData = new Uint8Array(
-      fs.readFileSync(path.resolve(__dirname, './resources/test.lzma')),
+      fs.readFileSync(path.resolve(__dirname, '../resources/test.lzma')),
     )
 
     const compressedDataPtr = lzma.newU8Array(compressedData.length)
