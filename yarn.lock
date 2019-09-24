@@ -7,9 +7,9 @@
   resolved "https://registry.yarnpkg.com/@protobufjs/utf8/-/utf8-1.1.0.tgz#a777360b5b39a1a2e5106f8e858f2fd2d060c570"
   integrity sha1-p3c2C1s5oaLlEG+OhY8v0tBgxXA=
 
-assemblyscript@AssemblyScript/assemblyscript:
+"assemblyscript@https://codeload.github.com/AssemblyScript/assemblyscript/tar.gz/ed97672a8cbd4ce8694bf1411ca7bd7a8734eb77":
   version "0.6.0"
-  resolved "https://codeload.github.com/AssemblyScript/assemblyscript/tar.gz/ed97672a8cbd4ce8694bf1411ca7bd7a8734eb77"
+  resolved "https://codeload.github.com/AssemblyScript/assemblyscript/tar.gz/ed97672a8cbd4ce8694bf1411ca7bd7a8734eb77#3ab6e5ff0c401346d42729d84cb9d6175cd3cb37"
   dependencies:
     "@protobufjs/utf8" "^1.1.0"
     binaryen "68.0.0-nightly.20190220"

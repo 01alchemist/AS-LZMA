@@ -1,8 +1,12 @@
 {
-    "name": "as-lzma",
-    "version": "1.0.0",
+    "name": "@01/as-lzma",
+    "version": "1.0.0-beta2",
     "description": "LZMA Decoder written in AssemblyScript",
-    "main": "src/index.ts",
+    "main": "index.js",
+    "files": [
+        "build",
+        "index.js"
+    ],
     "scripts": {
         "test": "jest",
         "tdd": "jest --watch",
@@ -30,6 +34,6 @@
     },
     "dependencies": {},
     "devDependencies": {
-        "assemblyscript": "AssemblyScript/assemblyscript"
+        "assemblyscript": "https://codeload.github.com/AssemblyScript/assemblyscript/tar.gz/ed97672a8cbd4ce8694bf1411ca7bd7a8734eb77"
     }
 }
